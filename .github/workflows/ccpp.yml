@@ -17,14 +17,15 @@ jobs:
            mkdir build 
            cd build 
            cmake .. 
-           export CMAKE_VERSION="v$(cat CMakeCache.txt | grep '^CMAKE_PROJECT_VERSION\b' | cut -d "=" -f2)"
-           if [ "$CMAKE_VERSION" = "`echo -e "$GITHUB_REF\n$CMAKE_VERSION" | sort -V | head -n1`" ]; then
+           CMAKE_VERSION="v$(cat CMakeCache.txt | grep '^CMAKE_PROJECT_VERSION\b' | cut -d "=" -f2)"
+           GIT_VERSION=$(git describe --tags)
+           if [ "$CMAKE_VERSION" = "`echo -e "$GIT_VERSION\n$CMAKE_VERSION" | sort -V | head -n1`" ]; then
              echo "CMAKE version lags behind commit version :("
              # echo ::set-output name=version::$VERSION
              # echo ::set-output name=new_version::yes
            fi
            echo $CMAKE_VERSION
-           echo $GITHUB_REF
+           echo $GIT_VERSION
 
     # - name: Create release
     #   if: steps.check.outputs.new_version == 'yes'
