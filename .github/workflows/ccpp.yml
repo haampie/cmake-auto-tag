@@ -19,7 +19,7 @@ jobs:
            cmake .. 
            CMAKE_VERSION="v$(cat CMakeCache.txt | grep '^CMAKE_PROJECT_VERSION\b' | cut -d "=" -f2)"
            GIT_VERSION=$(git describe --tags)
-           if [ "$CMAKE_VERSION" = "`echo -e "$GIT_VERSION\n$CMAKE_VERSION" | sort -V | head -n1`" ]; then
+           if [ "$CMAKE_VERSION" != "$CMAKE_VERSION" ]; then
              echo ::set-output name=CMAKE_ISSUE::yes
              echo ::set-output name=CMAKE_VERSION::$CMAKE_VERSION
              echo ::set-output name=GIT_VERSION::$GIT_VERSION
