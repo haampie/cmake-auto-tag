@@ -6,3 +6,5 @@ The cmake version should be in sync with the git version to ensure the correct f
 
 - cmake version: {{ env.CMAKE_VERSION }}
 - git tag: {{ env.GIT_VERSION }}
+
+{{ env.TEST_VAR }}

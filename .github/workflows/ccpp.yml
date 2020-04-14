@@ -30,6 +30,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         CMAKE_VERSION: ${{ steps.check.outputs.CMAKE_VERSION }}
         GIT_VERSION: ${{ steps.check.outputs.GIT_VERSION }}
+        TEST_VAR: wut
       with:
         filename: .github/tag-issue.md
 
