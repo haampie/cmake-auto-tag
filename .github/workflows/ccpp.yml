@@ -1,16 +1,13 @@
-name: Autotagger
+name: TagChecker
 
-on: 
+on:
   push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+    tags:
+      - 'v*'
 
 jobs:
-  autotag:
-    runs-on: ubuntu-18.04
+  checker:
+    runs-on: ubuntu-latest
     
     steps:
     - uses: actions/checkout@v2
@@ -20,20 +17,21 @@ jobs:
            mkdir build 
            cd build 
            cmake .. 
-           export VERSION="v$(cat CMakeCache.txt | grep '^CMAKE_PROJECT_VERSION\b' | cut -d "=" -f2)"
-           echo $VERSION
-           if [ git tag -l $VERSION ]; then
-             echo ::set-output name=version::$VERSION
-             echo ::set-output name=new_version::yes
+           export CMAKE_VERSION="v$(cat CMakeCache.txt | grep '^CMAKE_PROJECT_VERSION\b' | cut -d "=" -f2)"
+           if [ "$CMAKE_VERSION" = "`echo -e "$GITHUB_REF\n$CMAKE_VERSION" | sort -V | head -n1`" ]
+             echo "CMAKE version lags behind commit version :("
+             # echo ::set-output name=version::$VERSION
+             # echo ::set-output name=new_version::yes
            fi
 
-    - name: Create release
-      if: steps.check.outputs.new_version == 'yes'
-      run: |
-        echo ${{ steps.check.outputs.version }}
+    # - name: Create release
+    #   if: steps.check.outputs.new_version == 'yes'
+    #   run: |
+    #     echo ${{ steps.check.outputs.version }}
 
     # - name: Create Release
     #   id: create_release
+    #   if: steps.check.outputs.new_version == 'yes'
     #   uses: actions/create-release@v1
     #   env:
     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
