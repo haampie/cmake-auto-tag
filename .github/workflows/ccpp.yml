@@ -18,7 +18,7 @@ jobs:
            cd build 
            cmake .. 
            export CMAKE_VERSION="v$(cat CMakeCache.txt | grep '^CMAKE_PROJECT_VERSION\b' | cut -d "=" -f2)"
-           if [ "$CMAKE_VERSION" = "`echo -e "$GITHUB_REF\n$CMAKE_VERSION" | sort -V | head -n1`" ]
+           if [ "$CMAKE_VERSION" = "`echo -e "$GITHUB_REF\n$CMAKE_VERSION" | sort -V | head -n1`" ]; then
              echo "CMAKE version lags behind commit version :("
              # echo ::set-output name=version::$VERSION
              # echo ::set-output name=new_version::yes
