@@ -1,10 +1,5 @@
 ---
-title: cmake project version older than git tag
+title: cmake project version {{ env.CMAKE_VERSOIN }} does not match git tag {{ env.GIT_VERSION }}
 labels: bug
 ---
-The cmake version should be in sync with the git version to ensure the correct file names and sonames of shared libraries:
-
-- cmake version: {{ env.CMAKE_VERSION }}
-- git tag: {{ env.GIT_VERSION }}
-
-{{ env.TEST_VAR }}
+The cmake version should be in sync with the git version to ensure the correct file names and sonames of shared libraries.
