@@ -23,6 +23,8 @@ jobs:
              # echo ::set-output name=version::$VERSION
              # echo ::set-output name=new_version::yes
            fi
+           echo $CMAKE_VERSION
+           echo $GITHUB_REF
 
     # - name: Create release
     #   if: steps.check.outputs.new_version == 'yes'
