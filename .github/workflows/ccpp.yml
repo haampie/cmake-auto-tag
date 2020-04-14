@@ -1,0 +1,78 @@
+name: Autotagger
+
+on: 
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  autotag:
+    runs-on: ubuntu-18.04
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Version check
+      id: check
+      run: |
+           mkdir build 
+           cd build 
+           cmake .. 
+           export VERSION="v$(cat CMakeCache.txt | grep '^CMAKE_PROJECT_VERSION\b' | cut -d "=" -f2)"
+           echo $VERSION
+           if [ git tag -l $VERSION ]; then
+             echo ::set-output name=version::$VERSION
+             echo ::set-output name=new_version::yes
+           fi
+
+    - name: Create release
+      if: steps.check.outputs.new_version == 'yes'
+      run: |
+        echo ${{ steps.check.outputs.version }}
+
+    # - name: Create Release
+    #   id: create_release
+    #   uses: actions/create-release@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     tag_name: ${{ github.ref }}
+    #     release_name: Release ${{ github.ref }}
+    #     draft: false
+    #     prerelease: false
+
+    # # Upload the binaries + source with dependencies as well
+    # - uses: actions/checkout@v2
+    #   with:
+    #     submodules: recursive
+    #     path: sources/libtree
+
+    # - name: Create source tarball
+    #   run: |
+    #     rm -rf sources/libtree/.git
+    #     rm -rf sources/libtree/deps/ELFIO/{elf_examples,examples,doc}
+    #     tar -C sources -zcvf sources.tar.gz libtree
+
+    # - name: Upload sources
+    #   uses: actions/upload-release-asset@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+    #     asset_path: ./sources.tar.gz
+    #     asset_name: sources.tar.gz
+    #     asset_content_type: application/gzip
+
+    # - name: Upload binaries
+    #   uses: actions/upload-release-asset@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+    #     asset_path: ./libtree_x86_64.tar.gz
+    #     asset_name: libtree_x86_64.tar.gz
+    #     asset_content_type: application/gzip
+
+           
